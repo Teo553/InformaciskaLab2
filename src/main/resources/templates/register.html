@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Register</title>
+    <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-
+<div class="container">
+    <form class="form register-form">
+        <h2>Register</h2>
+        <div class="form-group">
+            <input type="text" id="name" name="name" required>
+            <label for="name">Full Name</label>
+        </div>
+        <div class="form-group">
+            <input type="email" id="email" name="email" required>
+            <label for="email">Email</label>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" name="password" required>
+            <label for="password">Password</label>
+        </div>
+        <div class="form-group">
+            <input type="password" id="confirm-password" name="confirm-password" required>
+            <label for="confirm-password">Confirm Password</label>
+        </div>
+        <button type="submit" class="btn">Register</button>
+        <p class="form-footer">
+            Already have an account? <a href="login.html">Login</a>
+        </p>
+    </form>
+</div>
 </body>
 </html>
