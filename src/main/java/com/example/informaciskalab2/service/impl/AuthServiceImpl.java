@@ -60,9 +60,13 @@ public class AuthServiceImpl implements AuthService {
         int special=0;
         int upperCase=0;
         int number=0;
+        int loweCase=0;
         for(int i=0;i<password.length();i++) {
             if(Character.isUpperCase(password.charAt(i))) {
                 upperCase++;
+            }
+            if(Character.isLowerCase(password.charAt(i))) {
+                loweCase++;
             }
             if(!Character.isAlphabetic(password.charAt(i)) && !Character.isDigit(password.charAt(i))) {
                 special++;
@@ -71,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
                 number++;
             }
         }
-        if(special>0 && upperCase>0 && number>0 && password.length()>7) {
+        if(special>0 && upperCase>0 && loweCase>0 && number>0 && password.length()>7) {
             return true;
         }
         return false;
