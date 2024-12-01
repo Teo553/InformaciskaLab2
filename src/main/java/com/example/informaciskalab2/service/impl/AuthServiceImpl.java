@@ -54,4 +54,26 @@ public class AuthServiceImpl implements AuthService {
         String otp = otpService.generateOTP(email);
         emailService.sendOtpEmail(email,otp);
     }
+
+    @Override
+    public boolean checkPasswordWeakness(String password) {
+        int special=0;
+        int upperCase=0;
+        int number=0;
+        for(int i=0;i<password.length();i++) {
+            if(Character.isUpperCase(password.charAt(i))) {
+                upperCase++;
+            }
+            if(!Character.isAlphabetic(password.charAt(i)) && !Character.isDigit(password.charAt(i))) {
+                special++;
+            }
+            if(Character.isDigit(password.charAt(i))) {
+                number++;
+            }
+        }
+        if(special>0 && upperCase>0 && number>0 && password.length()>7) {
+            return true;
+        }
+        return false;
+    }
 }

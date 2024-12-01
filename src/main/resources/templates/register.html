@@ -7,6 +7,7 @@
 </head>
 <body>
 <div class="container">
+    <h3 th:if="${error}" th:text="${error}"></h3>
     <form class="form register-form" th:action="${'/register'}" th:method="POST">
         <h2>Register</h2>
         <div class="form-group">

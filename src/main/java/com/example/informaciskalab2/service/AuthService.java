@@ -12,6 +12,7 @@ public interface AuthService {
 
     void sendLoginOTP(String email);
     void generateAndSendOTP(String email);
+    boolean checkPasswordWeakness(String password);
 
 
 }
