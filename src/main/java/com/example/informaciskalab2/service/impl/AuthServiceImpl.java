@@ -57,25 +57,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean checkPasswordWeakness(String password) {
-        int special=0;
-        int upperCase=0;
-        int number=0;
-        int loweCase=0;
-        for(int i=0;i<password.length();i++) {
-            if(Character.isUpperCase(password.charAt(i))) {
-                upperCase++;
-            }
-            if(Character.isLowerCase(password.charAt(i))) {
-                loweCase++;
-            }
-            if(!Character.isAlphabetic(password.charAt(i)) && !Character.isDigit(password.charAt(i))) {
-                special++;
-            }
-            if(Character.isDigit(password.charAt(i))) {
-                number++;
-            }
+        if (password == null || password.isEmpty()) {
+            return true;
         }
-        if(special>0 && upperCase>0 && loweCase>0 && number>0 && password.length()>7) {
+        if (password.length() < 6) {
+            return true;
+        }
+        if (!password.matches(".*[A-Za-z].*")) {
+            return true;
+        }
+        if (!password.matches(".*\\d.*")) {
             return true;
         }
         return false;
