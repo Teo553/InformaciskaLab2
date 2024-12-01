@@ -39,5 +39,11 @@ public class LoginController {
         }catch (InvalidCredentialsException e){
             throw new InvalidCredentialsException(email);
         }
+        //String token= UUID.randomUUID().toString();
+        //        this.authService.register(email,password,confirmPassword,name,surname);
+        //        User user = this.userRepository.findByEmail(email).orElseThrow();
+        //        user.setVerified(false);
+        //        user.setVerificationCode(token);
+        //        emailService.sendVerificationEmail(email,token);
     }
 }

@@ -27,4 +27,15 @@ public class InMemoryUserRepository {
     public Optional<User> findByEmailAndPassword(String email, String password) {
         return DataHolder.userList.stream().filter(user -> user.getEmail().equals(email) && user.getPassword().equals(password)).findFirst();
     }
+
+    public User findByVerificationToken(String token) {
+        return DataHolder.userList.stream()
+                .filter(user -> token.equals(user.getVerificationCode()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public User findByToken(String token) {
+        return DataHolder.userList.stream().filter(c->token.equals(c.getVerificationCode())).findFirst().orElse(null);
+    }
 }
