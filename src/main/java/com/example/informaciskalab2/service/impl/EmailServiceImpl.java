@@ -23,4 +23,14 @@ public class EmailServiceImpl implements EmailService {
         message.setText("Email verification link: "+verificationLink);
         mailSender.send(message);
     }
+
+    @Override
+    public void sendOtpEmail(String email, String otp) {
+        SimpleMailMessage message=new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Email OTP");
+        message.setText("Your OTP is: "+otp);
+        mailSender.send(message);
+    }
+
 }

@@ -5,6 +5,8 @@ import com.example.informaciskalab2.model.exceptions.InvalidCredentialsException
 import com.example.informaciskalab2.model.exceptions.PasswordDoNotMatchException;
 import com.example.informaciskalab2.repository.InMemoryUserRepository;
 import com.example.informaciskalab2.service.AuthService;
+import com.example.informaciskalab2.service.EmailService;
+import com.example.informaciskalab2.service.OTPService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,7 +14,12 @@ import java.util.Optional;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    public AuthServiceImpl(InMemoryUserRepository userRepository) {
+    private final EmailService emailService;
+    private final OTPService otpService;
+
+    public AuthServiceImpl(EmailService emailService, OTPService otpService, InMemoryUserRepository userRepository) {
+        this.emailService = emailService;
+        this.otpService = otpService;
         this.userRepository = userRepository;
     }
 
@@ -34,5 +41,17 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidCredentialsException(email);
         }
         return userRepository.findByEmailAndPassword(email,password).orElseThrow(()->new InvalidCredentialsException(email));
+    }
+
+    @Override
+    public void sendLoginOTP(String email) {
+        String otp=otpService.generateOTP(email);
+        emailService.sendVerificationEmail(email,otp);
+    }
+
+    @Override
+    public void generateAndSendOTP(String email) {
+        String otp = otpService.generateOTP(email);
+        emailService.sendOtpEmail(email,otp);
     }
 }

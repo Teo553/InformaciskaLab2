@@ -10,5 +10,8 @@ public interface AuthService {
 
     User login(String email, String password);
 
+    void sendLoginOTP(String email);
+    void generateAndSendOTP(String email);
+
 
 }

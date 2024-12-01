@@ -6,8 +6,11 @@
     <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
+<div>
+    <h3 th:if="${error}" th:text="${error}"></h3>
+</div>
 <div class="container">
-    <form class="form login-form" th:method="POST" th:action="${'/login'}">
+    <form class="form login-form" id="loginForm" th:method="POST" th:action="${'/login'}">
         <h2>Login</h2>
         <div class="form-group">
             <input type="email" id="email" name="email" required>
@@ -17,7 +20,14 @@
             <input type="password" id="password" name="password" required>
             <label for="password">Password</label>
         </div>
-        <button type="submit" class="btn">Login</button>
+<!--        OTP SEKCIJA INICIJALNO SOKRIENA-->
+        <div id="otp-section" th:if="${otpRequired}">
+            <div class="form-group">
+                <input type="text" id="otp" name="otp" placeholder="Enter OTP">
+                <label for="otp">OTP</label>
+            </div>
+        </div>
+        <button type="submit" class="btn" id="loginButton">Login</button>
         <p class="form-footer">
             Don't have an account? <a th:href="${'/register'}">Register</a>
         </p>

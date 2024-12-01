@@ -5,6 +5,7 @@ import com.example.informaciskalab2.model.User;
 import com.example.informaciskalab2.model.exceptions.InvalidCredentialsException;
 import com.example.informaciskalab2.repository.InMemoryUserRepository;
 import com.example.informaciskalab2.service.AuthService;
+import com.example.informaciskalab2.service.OTPService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
     private final AuthService authService;
     private final InMemoryUserRepository userRepository;
+    private final OTPService otpService;
 
-    public LoginController(AuthService authService, InMemoryUserRepository userRepository) {
+    public LoginController(AuthService authService, InMemoryUserRepository userRepository, OTPService otpService) {
         this.authService = authService;
         this.userRepository = userRepository;
+        this.otpService = otpService;
     }
 
     @GetMapping
@@ -30,20 +33,33 @@ public class LoginController {
     }
 
     @PostMapping
-    public String login(@RequestParam String email, @RequestParam String password,HttpSession session) {
-        try{
-            authService.login(email, password);
-            User user=this.userRepository.findByEmail(email).orElseThrow();
-            session.setAttribute("user",user);
-            return "redirect:/home";
-        }catch (InvalidCredentialsException e){
-            throw new InvalidCredentialsException(email);
+    public String login(@RequestParam String email, @RequestParam String password,@RequestParam(required = false) String otp,HttpSession session,Model model) {
+        try {
+            if (password != null && otp == null) {
+                authService.login(email, password);
+                authService.generateAndSendOTP(email);
+                model.addAttribute("otpRequired", true);
+                return "login";
+            }
+
+            if (otp != null) {
+                boolean isValidOtp = otpService.validateOTP(email, otp);
+                if (!isValidOtp) {
+                    model.addAttribute("error", "Invalid OTP. Please try again.");
+                    model.addAttribute("otpRequired", true);
+                    return "login";
+                }
+
+                User user = this.userRepository.findByEmail(email).orElseThrow();
+                session.setAttribute("user", user);
+                return "redirect:/home";
+            }
+
+            throw new InvalidCredentialsException("Invalid login attempt");
+
+        } catch (InvalidCredentialsException e) {
+            model.addAttribute("error", "Invalid email or password.");
+            return "login";
         }
-        //String token= UUID.randomUUID().toString();
-        //        this.authService.register(email,password,confirmPassword,name,surname);
-        //        User user = this.userRepository.findByEmail(email).orElseThrow();
-        //        user.setVerified(false);
-        //        user.setVerificationCode(token);
-        //        emailService.sendVerificationEmail(email,token);
     }
 }
