@@ -10,7 +10,7 @@
 <header class="header">
     <div class="logo">MyWebsite</div>
     <div class="user-info">
-        <span class="username">John Doe</span>
+        <span class="username" th:text="${user.getFirstName()}"></span>
         <button class="btn btn-small">Logout</button>
     </div>
 </header>
