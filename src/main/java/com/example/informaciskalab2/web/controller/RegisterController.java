@@ -40,7 +40,7 @@ public class RegisterController {
     @PostMapping
     public String postRegisterPage(@RequestParam String name, @RequestParam String  surname,@RequestParam String email, @RequestParam String password, @RequestParam String confirmPassword) {
         String token= UUID.randomUUID().toString();
-        if(!this.authService.checkPasswordWeakness(password)){
+        if(this.authService.checkPasswordWeakness(password)){
             return "redirect:/register?error=Your password must be at least 8 characters long have a special character and include at least one digit";
         }
         this.authService.register(email,password,confirmPassword,name,surname);
