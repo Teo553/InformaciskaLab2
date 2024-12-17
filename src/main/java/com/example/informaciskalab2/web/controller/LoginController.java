@@ -3,7 +3,7 @@ package com.example.informaciskalab2.web.controller;
 
 import com.example.informaciskalab2.model.User;
 import com.example.informaciskalab2.model.exceptions.InvalidCredentialsException;
-import com.example.informaciskalab2.repository.InMemoryUserRepository;
+import com.example.informaciskalab2.repository.UserRepository;
 import com.example.informaciskalab2.service.AuthService;
 import com.example.informaciskalab2.service.OTPService;
 import jakarta.servlet.http.HttpSession;
@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/login")
 public class LoginController {
     private final AuthService authService;
-    private final InMemoryUserRepository userRepository;
+    private final UserRepository userRepository;
     private final OTPService otpService;
 
-    public LoginController(AuthService authService, InMemoryUserRepository userRepository, OTPService otpService) {
+    public LoginController(AuthService authService, UserRepository userRepository, OTPService otpService) {
         this.authService = authService;
         this.userRepository = userRepository;
         this.otpService = otpService;
@@ -50,7 +50,7 @@ public class LoginController {
                     return "login";
                 }
 
-                User user = this.userRepository.findByEmail(email).orElseThrow();
+                User user = this.userRepository.findUserByEmail(email);
                 session.setAttribute("user", user);
                 return "redirect:/home";
             }

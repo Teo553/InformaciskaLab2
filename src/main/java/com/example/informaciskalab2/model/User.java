@@ -1,24 +1,40 @@
 package com.example.informaciskalab2.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
+@Entity
+@Table( name="users" )
 public class User {
-    private String hashedEmail;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String email;
+
     private String hashedPassword;
-    private String hashedFirstName;
-    private String hashedLastName;
+
     private String firstName;
+
+    private String lastName;
+
     private boolean isVerified;
+
     private String verificationCode;
 
     public User(String email, String password, String firstName, String lastName) {
         this.hashedPassword = hashWithSalt(password);
-        this.hashedEmail = hashWithSalt(email);
-        this.hashedFirstName = hashWithSalt(firstName);
-        this.hashedLastName = hashWithSalt(lastName);
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.isVerified=false;
+    }
+
+    public User() {
+
     }
 
     private String hashWithSalt(String input) {

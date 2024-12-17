@@ -1,4 +1,4 @@
-package com.example.informaciskalab2.service.Impl;
+package com.example.informaciskalab2.service.impl;
 
 import com.example.informaciskalab2.service.EmailService;
 import org.springframework.mail.SimpleMailMessage;

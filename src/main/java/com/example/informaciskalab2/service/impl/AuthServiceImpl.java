@@ -1,29 +1,31 @@
-package com.example.informaciskalab2.service.Impl;
+package com.example.informaciskalab2.service.impl;
 
 import com.example.informaciskalab2.model.User;
 import com.example.informaciskalab2.model.exceptions.InvalidCredentialsException;
 import com.example.informaciskalab2.model.exceptions.PasswordDoNotMatchException;
-import com.example.informaciskalab2.repository.InMemoryUserRepository;
+import com.example.informaciskalab2.repository.UserRepository;
 import com.example.informaciskalab2.service.AuthService;
 import com.example.informaciskalab2.service.EmailService;
 import com.example.informaciskalab2.service.OTPService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     private final EmailService emailService;
     private final OTPService otpService;
 
-    public AuthServiceImpl(EmailService emailService, OTPService otpService, InMemoryUserRepository userRepository) {
+    public AuthServiceImpl(EmailService emailService, OTPService otpService, UserRepository userRepository) {
         this.emailService = emailService;
         this.otpService = otpService;
         this.userRepository = userRepository;
     }
 
-    private final InMemoryUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public User register(String email, String password, String repeatPassword ,String name, String surname) {
@@ -31,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
             throw new PasswordDoNotMatchException();
         }
         User user=new User(email,password,name,surname);
-        this.userRepository.saveOrUpdate(user);
+        this.userRepository.save(user);
         return user;
     }
 
@@ -40,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
         if(email==null || password==null) {
             throw new InvalidCredentialsException(email);
         }
-        return userRepository.findByEmailAndPassword(email,password).orElseThrow(()->new InvalidCredentialsException(email));
+        return userRepository.findUserByEmailAndHashedPassword(email,encoder.encode(password));
     }
 
     @Override

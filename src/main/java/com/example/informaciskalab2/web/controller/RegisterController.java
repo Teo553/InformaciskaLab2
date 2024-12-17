@@ -4,7 +4,7 @@ package com.example.informaciskalab2.web.controller;
 import com.example.informaciskalab2.model.User;
 import com.example.informaciskalab2.model.exceptions.PasswordDoNotMatchException;
 import com.example.informaciskalab2.model.exceptions.PasswordTooWeak;
-import com.example.informaciskalab2.repository.InMemoryUserRepository;
+import com.example.informaciskalab2.repository.UserRepository;
 import com.example.informaciskalab2.service.AuthService;
 import com.example.informaciskalab2.service.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,10 +22,10 @@ import java.util.UUID;
 public class RegisterController {
 
     private final AuthService authService;
-    private final InMemoryUserRepository userRepository;
+    private final UserRepository userRepository;
     private final EmailService emailService;
 
-    public RegisterController(AuthService authService, InMemoryUserRepository userRepository, EmailService emailService) {
+    public RegisterController(AuthService authService, UserRepository userRepository, EmailService emailService) {
         this.authService = authService;
         this.userRepository = userRepository;
         this.emailService = emailService;
@@ -44,7 +44,7 @@ public class RegisterController {
             return "redirect:/register?error=Your password must be at least 8 characters long have a special character and include at least one digit";
         }
         this.authService.register(email,password,confirmPassword,name,surname);
-        User user = this.userRepository.findByEmail(email).orElseThrow();
+        User user = this.userRepository.findUserByEmail(email);
         user.setVerified(false);
         user.setVerificationCode(token);
         emailService.sendVerificationEmail(email,token);
