@@ -28,29 +28,32 @@ public class LoginController {
     }
 
     @GetMapping
-    public String getLoginPage() {
+    public String getLoginPage(Model model) {
+        model.addAttribute("otpRequired", false);
         return "login";
     }
 
     @PostMapping
-    public String login(@RequestParam String email, @RequestParam String password,@RequestParam(required = false) String otp,HttpSession session,Model model) {
+    public String login(@RequestParam(required = false) String email, @RequestParam(required = false) String password,@RequestParam(required = false) String otp,HttpSession session,Model model) {
         try {
             if (password != null && otp == null) {
                 authService.login(email, password);
                 authService.generateAndSendOTP(email);
+                session.setAttribute("email", email);
                 model.addAttribute("otpRequired", true);
                 return "login";
             }
 
             if (otp != null) {
-                boolean isValidOtp = otpService.validateOTP(email, otp);
+                String emailtmp= (String) session.getAttribute("email");
+                boolean isValidOtp = otpService.validateOTP(emailtmp, otp);
                 if (!isValidOtp) {
                     model.addAttribute("error", "Invalid OTP. Please try again.");
                     model.addAttribute("otpRequired", true);
                     return "login";
                 }
 
-                User user = this.userRepository.findUserByEmail(email);
+                User user = this.userRepository.findUserByEmail(emailtmp);
                 session.setAttribute("user", user);
                 return "redirect:/home";
             }
@@ -59,6 +62,7 @@ public class LoginController {
 
         } catch (InvalidCredentialsException e) {
             model.addAttribute("error", "Invalid email or password.");
+            model.addAttribute("otpRequired", false);
             return "login";
         }
     }
