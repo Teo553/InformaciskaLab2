@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ADIN ONLY</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="header">
+  <div class="logo">ADMIN PAGE</div>
+  <div class="user-info">
+    <span class="username"><th:block sec:authentication="name"> </th:block></span>
+    <a href="/logout" e class="btn btn-small" >Logout</a>
+  </div>
+</header>
+
+<main class="main-content">
+  <h1>ONLY ADMINS CAN ACCESS THIS PAGE HEHE</h1>
+  <p>TOLKU OD MENE</p>
+</main>
+
+<footer class="footer">
+  <p>&copy; 2023 MyWebsite. All rights reserved.</p>
+</footer>
+</body>
+</html>
